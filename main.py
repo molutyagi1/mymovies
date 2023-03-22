@@ -19,7 +19,6 @@ Bootstrap(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 
@@ -35,24 +34,9 @@ class Movie(db.Model):
     img_url = db.Column(db.String(250), nullable=False)
 
 
-# db.init_app(app)
-# with app.app_context():
-# db.create_all()
+with app.app_context():
+    db.create_all()
 
-
-# new_movie = Movie(
-#     title="Phone Booth",
-#     year=2002,
-#     description="Publicist Stuart Shepard finds himself trapped in a phone booth, pinned down by an extortionist's "
-#                 "sniper rifle. Unable to leave or receive outside help, Stuart's negotiation with the caller leads to"
-#                 " a jaw-dropping climax.",
-#     rating=7.3,
-#     ranking=10,
-#     review="My favourite character was the caller.",
-#     img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg"
-# )
-# db.session.add(new_movie)
-# db.session.commit()
 
 class FindMovieForm(FlaskForm):
     title = StringField("Movie Title", validators=[DataRequired()])
@@ -126,5 +110,9 @@ def delete_movie():
     return redirect(url_for("home"))
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+def application(env, start_response):
+    return app(env, start_response)
