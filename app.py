@@ -90,17 +90,23 @@ def find_movie():
         return redirect(url_for("rate_movie", id=new_movie.id))
 
 
+
 @app.route("/edit", methods=["GET", "POST"])
 def rate_movie():
-    form = RateMovieForm()
     movie_id = request.args.get("id")
     movie = Movie.query.get(movie_id)
+    form = RateMovieForm(
+        rating=movie.rating,
+        review=movie.review
+    )
     if form.validate_on_submit():
         movie.rating = float(form.rating.data)
         movie.review = form.review.data
         db.session.commit()
         return redirect(url_for('home'))
     return render_template("edit.html", movie=movie, form=form)
+
+
 
 
 @app.route("/delete")
